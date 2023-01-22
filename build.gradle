@@ -1,0 +1,46 @@
+buildscript {
+    ext.ktor_version = '2.2.2'
+
+    repositories {
+        maven { url "https://repo1.maven.org/maven2" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
+    }
+}
+
+plugins {
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.8.0"
+}
+
+apply plugin: 'kotlin'
+
+group 'tech.justagod'
+version '1.0.0'
+
+wrapper {
+    gradleVersion = '7.5'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+repositories {
+    maven { url "https://repo1.maven.org/maven2" }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3"
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation "io.ktor:ktor-client-okhttp:$ktor_version"
+    implementation "io.ktor:ktor-client-content-negotiation:$ktor_version"
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-json', version: '1.4.1'
+    runtimeOnly group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-json-jvm', version: '1.4.1'
+
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:3.4.2"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
