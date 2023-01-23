@@ -11,12 +11,14 @@ buildscript {
 
 plugins {
     id "org.jetbrains.kotlin.plugin.serialization" version "1.8.0"
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
-
 apply plugin: 'kotlin'
 
 group 'tech.justagod'
-version '1.0.0'
+version '1.0.1'
 
 wrapper {
     gradleVersion = '7.5'
@@ -43,4 +45,76 @@ dependencies {
 
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.4.2"
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            group = 'tech.justagod'
+            artifactId = "sc-api"
+            version = "1.0.1"
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name =  'Stalcraft API'
+
+                description = 'Stalcraft API implementation in Kotlin'
+                url  = 'https://github.com/JustAGod1/sc-api-kt'
+
+
+                scm {
+                    connection = 'scm:git:https://github.com/JustAGod1/sc-api-kt'
+                    developerConnection = 'scm:git:https://github.com/JustAGod1/sc-api-kt'
+                    url = 'https://github.com/JustAGod1/sc-api-kt'
+                }
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'JustAGod'
+                        name = 'Yury Barinov'
+                        email = 'hvalick2111@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            name = "Staging"
+            credentials {
+                username = usr
+                password = pswd
+            }
+        }
+        maven {
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            name = "Snapshots"
+            credentials {
+                username = usr
+                password = pswd
+            }
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
 }
